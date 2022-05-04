@@ -1,0 +1,27 @@
+[Unit]
+Description=Issue smallstep TLS certificate
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=true
+Environment=STEPPATH=/etc/step
+ExecStartPre=bash -c 'umask 137; echo ${STEP_PROVISIONER_PASSWORD} > ${STEP_PROVISIONER_PASSWORD_FILE}'
+ExecStartPre=step ca root ${STEP_CA_FILE} --force --context ${STEP_CONTEXT}
+ExecStart=step ca certificate ${STEP_CRT_SUBJECT} \
+  ${STEP_CRT_FILE} \
+  ${STEP_KEY_FILE} \
+  $STEP_SANS \
+  --provisioner ${STEP_CA_PROVISIONER} \
+  --not-after ${STEP_CRT_DURATION} \
+  --force \
+  --provisioner-password-file=${STEP_PROVISIONER_PASSWORD_FILE} --context ${STEP_CONTEXT}
+ExecStartPost=chown ${STEP_FILE_OWNER}:${STEP_FILE_GROUP} ${STEP_CA_FILE} ${STEP_CRT_FILE} ${STEP_KEY_FILE}
+ExecStartPost=chmod ${STEP_FILE_MODE} ${STEP_CA_FILE} ${STEP_CRT_FILE} ${STEP_KEY_FILE}
+
+Restart=on-failure
+RestartSec=60s
+
+[Install]
+WantedBy=multi-user.target

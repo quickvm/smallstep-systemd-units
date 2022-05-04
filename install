@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+# SPDX-License-Identifier: MIT
+#
+# Copyright (c) 2022 QuickVM, LLC <contact@quickvm.com> All Rights Reserved.
+
+set -e
+
+[[ $UID == 0 ]] || { echo "Please run this as root!"; exit 1; }
+
+: ${UNIT_FILES:=./units}
+: ${UNIT_DIR:=/etc/systemd/system}
+: ${STEPPATH:=/etc/step}
+
+[[ -d ${STEPPATH} ]] || { echo "The ${STEPPATH} directory does not exist! Please create it!"; exit 1; }
+[[ -d ${UNIT_FILES} ]] || { echo "The ${UNIT_FILES} directory cannot be found! Please run this from the repo root directory!"; exit 1; }
+
+for FILE in ${UNIT_FILES}/*; do
+  install -m 0644 ${FILE} ${UNIT_DIR}
+  DEST="$(basename -- $FILE)"
+  echo "Copied ${FILE} to ${UNIT_DIR}/${DEST}"
+done
+
+systemctl daemon-reload
+
+echo ""
+echo "Great job, the smallstep systemd units are now installed!"
+echo ""

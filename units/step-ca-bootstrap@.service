@@ -1,0 +1,17 @@
+[Unit]
+Description=Bootstrap smallstep CA
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=true
+Environment=STEPPATH=/etc/step
+ExecStart=step ca bootstrap --force --install \
+--ca-url ${STEP_CA_URL} --fingerprint ${STEP_CA_FINGERPRINT} --context %i
+
+Restart=on-failure
+RestartSec=60s
+
+[Install]
+WantedBy=multi-user.target

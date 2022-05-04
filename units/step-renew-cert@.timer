@@ -1,0 +1,11 @@
+[Unit]
+Description=Run step-renew-cert@%i.service every 12 hours
+
+[Timer]
+Persistent=true
+OnStartupSec=5m
+OnUnitActiveSec=12hr
+RandomizedDelaySec=1hr
+
+[Install]
+WantedBy=multi-user.target
