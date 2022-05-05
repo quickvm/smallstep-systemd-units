@@ -7,12 +7,13 @@ Automatically:
 1. Run `sudo ./install`
 
 Manually:
+1. Run `sudo mkdir /etc/step`
 1. `sudo cp mv units/* /etc/systemd/system/`
 1. run `systemctl daemon-reload`
 
 ## Bootstrap your CA
 
-Pick a name for your CA. If you have a smallstep account using the the first part of the CA URL is ideal. Next create a systemd drop-in with:
+Pick a name for your CA. If you have a smallstep account using the first part of the CA URL is ideal. Next create a systemd drop-in with:
 
 ```
 systemctl edit step-ca-bootstrap@rad.service
@@ -43,7 +44,7 @@ and set `STEP_CA_FINGERPRINT` and `STEP_CA_URL` as shown above and start the ser
 
 ## Issue a certificate for Hashicorp Vault
 
-In this example we are going to automate the issuing of TLS certificates for [Hashicorp Vault]()
+In this example we are going to automate the issuing of TLS certificates for [Hashicorp Vault](https://www.vaultproject.io/)
 
 It's configuration for using TLS certs looks like this in `/etc/vault.d/vault.hcl `:
 
