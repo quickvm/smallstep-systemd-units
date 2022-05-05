@@ -2,6 +2,8 @@
 
 ## Install the units
 
+**Note:** Make sure you have [step CLI](https://smallstep.com/docs/step-cli/installation) installed!
+
 Automatically:
 1. Run `sudo mkdir /etc/step`
 1. Run `sudo ./install`
