@@ -145,6 +145,7 @@ Environment=STEP_CRT_FILE=/opt/vault/tls/vault.crt
 Environment=STEP_KEY_FILE=/opt/vault/tls/vault.key
 Environment=STEP_FILE_OWNER=vault
 Environment=STEP_FILE_GROUP=vault
+Environment=STEP_FILE_MODE=0600
 ExecStartPost=systemctl reload %i.service
 ```
 
