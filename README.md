@@ -73,7 +73,8 @@ Be sure you configure your Vault server with the correct file paths and take not
 
 ```bash
 pwgen -1 36 |tee rad_jwk_provisioner_password
-step beta ca provisioner add rad --type JWK --create --password-file=rad_jwk_provisioner_password
+export STEPPATH=/etc/step
+sudo step ca provisioner add rad --type JWK --create --password-file=rad_jwk_provisioner_password
 ```
 
 #### Create the drop-in for the service:
@@ -163,6 +164,19 @@ OnUnitActiveSec=12hr
 ```
 
 and set `OnUnitActiveSec=12hr` to something below `STEP_CRT_DURATION`. See [systemd.timer](https://www.freedesktop.org/software/systemd/man/systemd.timer.html) for more information.
+
+Now you will want to enable and start the renew timer:
+
+```bash
+systemctl enable --now step-renew-cert@vault.timer
+```
+
+You can view the timers status with `systemctl list-timers`:
+
+```bash
+systemctl list-timers |grep step-renew
+Sun 2022-07-24 04:53:15 CDT 12h left      Sat 2022-07-16 09:05:12 CDT 1 week 0 days ago step-renew-cert@vault.timer    step-renew-cert@vault.service
+```
 
 
 # License
