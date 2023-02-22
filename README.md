@@ -104,7 +104,7 @@ Environment=STEP_CRT_DURATION=24h
 Environment=STEP_CRT_SUBJECT=yourhostname
 Environment=STEP_PROVISIONER_PASSWORD=rad_jwk_provisioner_password
 Environment=STEP_PROVISIONER_PASSWORD_FILE=/etc/step/profiles/rad/rad_jwk_provisioner_password
-ExecStartPost=systemctl reload %i.service
+ExecStartPost=systemctl try-reload-or-restart %i.service
 ```
 
 **Note:** Be sure to set `STEP_CRT_SUBJECT` to your hostname of your server and `STEP_PROVISIONER_PASSWORD` to the password you set on your JWK provisioner. Also `STEP_CONTEXT` should match the name of your `step-ca-bootstrap@.service` so it uses the right `step context`. You will want to set the `After=` and `Wants=` to `step-ca-bootstrap@.service` so your `step-issue-cert@vault.service` starts after the CA is bootstrapped. The bootstrap should only have to happen once but we just use these Unit directives to make sure we have everything setup before we start issuing certs. If you don't want this service to reload your `vault.service` automatically remove `ExecStartPost=systemctl reload %i.service`. Lastly you can adjust how long the cert is valid for by changing `STEP_CRT_DURATION`. Valid time units are "ns", "us" (or "µs"), "ms", "s", "m", "h" (RFC 3339 format).
@@ -136,7 +136,7 @@ and add the following overrides:
 ```
 [Unit]
 After=step-ca-bootstrap@rad.service step-issue-cert@vault.service
-Wants=step-ca-bootstrap@rad.service step-issue-cert@vault.service
+Wants=step-ca-bootstrap@rad.service
 
 [Service]
 Environment=STEP_CONTEXT=rad
@@ -183,7 +183,7 @@ Sun 2022-07-24 04:53:15 CDT 12h left      Sat 2022-07-16 09:05:12 CDT 1 week 0 d
 
 MIT License
 
-Copyright (c) 2022 QuickVM
+Copyright (c) 2023 QuickVM
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

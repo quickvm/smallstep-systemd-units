@@ -5,7 +5,6 @@ Wants=network-online.target
 
 [Service]
 Type=oneshot
-RemainAfterExit=true
 Environment=STEPPATH=/etc/step
 ExecStartPre=bash -c 'umask 137; echo ${STEP_PROVISIONER_PASSWORD} > ${STEP_PROVISIONER_PASSWORD_FILE}'
 ExecStartPre=step ca root ${STEP_CA_FILE} --force --context ${STEP_CONTEXT}
